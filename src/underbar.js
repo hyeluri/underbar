@@ -148,17 +148,14 @@ var _ = { };
   // Note: you will nead to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
 
-    var isFunc;
+    var isFunc = typeof functionOrKey === 'function';
 
-    if(typeof functionOrKey === 'function')
-        isFunc = true;
-    else
-        isFunc = false;
+    //if(typeof functionOrKey === 'function')
+      //  isFunc = true;
 
     return _.map(collection, function(value){
       return (isFunc ? functionOrKey : value[functionOrKey]).apply(value,args);
     });
-
 
   };
 
@@ -176,6 +173,15 @@ var _ = { };
   //     return total + number;
   //   }, 0); // should be 6
   _.reduce = function(collection, iterator, accumulator) {
+
+    if(accumulator == null) accumulator=collection[0];
+
+    _.each(collection,function(value){
+      accumulator = iterator(accumulator, value);
+    });
+
+    return accumulator;
+
   };
 
   // Determine if the array or object contains a given value (using `===`).
