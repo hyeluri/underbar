@@ -200,11 +200,35 @@ var _ = { };
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+    return _.reduce(collection, function(match, value){
+      if(!match){
+        return false;
+      }
+      return !!(match = (iterator ? iterator(value):value));
+    },true);
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
+
+    if(!iterator){
+      iterator = function(value){return value;};
+      //iterator = _.identity;
+    }
+    
+    var result = false;
+    
+  /*  _.every(collection,function(value){
+      if(iterator(value)) result = true;
+      return true;
+    });*/
+
+    _.each(collection, function(value){
+      if(iterator(value)) result = true;
+    });
+    
+    return result;
     // TIP: There's a very clever way to re-use every() here.
   };
 
