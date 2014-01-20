@@ -252,11 +252,30 @@ var _ = { };
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+  
+   /*for(var i = 0; i<arguments.length; i++){
+       for(var key in argument[i]){
+       obj[key] = argument[i][key];
+      };
+   };*/
+    _.each(arguments,function(argument){
+      for(var key in argument){
+       obj[key] = argument[key];
+      };
+    });
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    _.each(arguments,function(argument){
+      for(var key in argument){
+       if(obj[key] == null)
+          obj[key] = argument[key];
+      };
+    });
+    return obj;
   };
 
 
@@ -298,6 +317,22 @@ var _ = { };
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var key;
+    var prevResults = {};
+  
+  /*  return function(){
+      key = arguments[0];
+      if(prevResults[key] == null){
+       return prevResults[key] = func.apply(this, arguments);
+      }
+      else
+        return prevResults[key];
+    };
+  */
+   return function(){
+      key = arguments[0];
+      return prevResults[key] ? prevResults[key]:prevResults[key] = func.apply(this, arguments);
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -306,7 +341,9 @@ var _ = { };
   // The arguments for the original function are passed after the wait
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
-  _.delay = function(func, wait) {
+  _.delay = function(func, wait){ 
+    var args = Array.prototype.slice.call(arguments,2);
+    setTimeout(function(){return func.apply(this,args);},wait);
   };
 
 
@@ -321,6 +358,15 @@ var _ = { };
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+ 
+    var arrCopy = array.slice();
+    var newArray = [];
+
+    while(arrCopy.length>2){
+      newArray.push(arrCopy.splice(Math.floor(Math.random()*(arrCopy.length-0+1)),1));
+    }
+
+    return newArray;  
   };
 
 
